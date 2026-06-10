@@ -54,18 +54,10 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 4. Build for Production
-Verify typescript and production compile readiness:
-```bash
-npm run build
-```
 
 ---
 
 ## 📤 Deployment Guide
+vercel : https://datastraw-support-crm.vercel.app/
 
-### Vercel (Recommended)
-1. Push your repository to GitHub.
-2. Import the project into [Vercel](https://vercel.com).
-3. Under Environment Variables, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-4. Click **Deploy**. Vercel will automatically host the application.
+

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DataStraw Support CRM",
+  title: "SupportFlow CRM",
   description: "A professional customer support management system.",
 };
 

@@ -1,4 +1,4 @@
-# DataStraw Support CRM Portal
+# SupportFlow CRM Portal
 
 A full-stack, responsive customer support ticketing system designed for seamless tracking, search, and collaboration. Built with **Next.js (App Router)**, **Tailwind CSS v4**, and **Supabase**.
 
@@ -58,6 +58,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ---
 
 ## 📤 Deployment Guide
-vercel : https://datastraw-support-crm.vercel.app/
+Vercel: https://SupportFlow-support-crm.vercel.app/ (replace with your deployed URL)
+
+---
+
+## 🎨 Customization
+
+This fork has been customized with:
+- **Custom Branding**: SupportFlow CRM with SK logo (Sujal Kesharwani)
+- **Unique Color Theme**: Cyan-teal gradient replacing the original indigo-violet
+- **Enhanced Status Badges**: Square badges with emoji indicators and gradient backgrounds
+- **Repositioned Create Button**: Moved to sidebar header for better accessibility
+- **Custom Empty State**: Mailbox emoji and contextual messaging
 
 

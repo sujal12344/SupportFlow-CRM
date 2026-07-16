@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use, useCallback } from 'react';
+import { useState, useEffect, use, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -59,6 +59,27 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  // Fetch ticket details on mount and when ticket_id changes
+  useEffect(() => {
+    const loadTicket = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/tickets/${ticket_id}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to load ticket');
+        setTicket(data);
+        setStatusInput(data.status);
+        setError(null);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'An error occurred.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void loadTicket();
+  }, [ticket_id]);
+
   const fetchTicketDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/tickets/${ticket_id}`);
@@ -69,15 +90,8 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
       setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred.');
-    } finally {
-      setLoading(false);
     }
   }, [ticket_id]);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchTicketDetails();
-  }, [fetchTicketDetails]);
 
   const handleAddNote = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,7 +162,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-3 text-slate-400">
-        <span className="w-8 h-8 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin" />
+        <span className="w-8 h-8 border-2 border-cyan-600/30 border-t-cyan-600 rounded-full animate-spin" />
         <p className="text-sm">Loading ticket details...</p>
       </div>
     );
@@ -186,11 +200,11 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
       <div className="glass-card rounded-2xl p-6">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5">
           <div className="space-y-3">
-            <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Feature 5 · Ticket Detail</p>
+            <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Feature 5 · Ticket Detail</p>
             <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={copyTicketId}
-                className="inline-flex items-center gap-2 font-mono font-bold text-indigo-400 hover:text-indigo-300 text-xl"
+                className="inline-flex items-center gap-2 font-mono font-bold text-cyan-400 hover:text-cyan-300 text-xl"
               >
                 <Hash size={18} className="opacity-50" />
                 {ticket.ticket_id}
@@ -238,7 +252,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                 <div>
                   <span className="field-label">Email</span>
                   <p className="field-value mt-1">
-                    <a href={`mailto:${ticket.customer_email}`} className="text-indigo-300 hover:text-indigo-200 flex items-center gap-1.5">
+                    <a href={`mailto:${ticket.customer_email}`} className="text-cyan-300 hover:text-cyan-200 flex items-center gap-1.5">
                       <Mail size={14} className="text-slate-500 shrink-0" />
                       <span className="truncate">{ticket.customer_email}</span>
                     </a>
@@ -251,7 +265,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
           {/* Description */}
           <div className="glass-card rounded-2xl p-6 space-y-4">
             <h3 className="section-title flex items-center gap-2">
-              <FileText size={14} className="text-indigo-400" />
+              <FileText size={14} className="text-cyan-400" />
               Description
             </h3>
             <div className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap bg-slate-950/50 rounded-xl p-4 border border-slate-800/60">
@@ -262,7 +276,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
           {/* Comments timeline */}
           <div className="space-y-4">
             <h3 className="section-title flex items-center gap-2 px-1">
-              <MessageSquare size={14} className="text-indigo-400" />
+              <MessageSquare size={14} className="text-cyan-400" />
               Comments & Notes ({ticket.notes?.length || 0})
             </h3>
 
@@ -275,7 +289,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
                 {ticket.notes.map((note, index) => (
                   <div key={note.id || index} className="glass-card rounded-xl p-4 animate-fade-in">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800/50">
-                      <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Comment</span>
+                      <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">Comment</span>
                       <span className="text-[10px] text-slate-500" title={formatDatePrecise(note.created_at)}>
                         {formatRelative(note.created_at)}
                       </span>
@@ -304,7 +318,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               <button
                 type="submit"
                 disabled={submittingNote || !newNote.trim()}
-                className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-indigo-600/15"
+                className="w-full py-2.5 bg-linear-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-cyan-600/15"
               >
                 {submittingNote ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -327,7 +341,7 @@ export default function TicketDetailPage({ params }: TicketDetailPageProps) {
               </div>
               <div className="flex justify-between gap-4">
                 <span className="text-slate-500 font-semibold shrink-0">Ticket ID</span>
-                <span className="text-indigo-400 font-mono font-bold">{ticket.ticket_id}</span>
+                <span className="text-cyan-400 font-mono font-bold">{ticket.ticket_id}</span>
               </div>
               <div className="flex justify-between gap-4">
                 <span className="text-slate-500 font-semibold shrink-0">Created</span>

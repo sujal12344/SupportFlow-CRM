@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json(formattedTickets);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('API GET /api/tickets error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch tickets' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch tickets' },
       { status: 500 }
     );
   }
@@ -55,10 +55,10 @@ export async function POST(request: NextRequest) {
       ticket_id: newTicket.ticket_id,
       created_at: newTicket.created_at
     }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('API POST /api/tickets error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to create ticket' },
+      { error: error instanceof Error ? error.message : 'Failed to create ticket' },
       { status: 500 }
     );
   }

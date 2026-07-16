@@ -32,10 +32,10 @@ export async function GET(
       updated_at: ticket.updated_at,
       notes: ticket.notes || [],
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API GET /api/tickets/[ticket_id] error for ${request.url}:`, error);
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch ticket' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch ticket' },
       { status: 500 }
     );
   }
@@ -69,10 +69,10 @@ export async function PUT(
       success: true,
       updated_at: result.updated_at
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API PUT /api/tickets/[ticket_id] error:`, error);
     return NextResponse.json(
-      { error: error.message || 'Failed to update ticket' },
+      { error: error instanceof Error ? error.message : 'Failed to update ticket' },
       { status: 500 }
     );
   }

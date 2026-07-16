@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Search,
@@ -51,8 +51,30 @@ function DashboardContent() {
     return () => clearTimeout(handler);
   }, [search]);
 
-  const fetchFiltered = useCallback(async () => {
-    setLoading(true);
+  // Fetch tickets when filters change
+  useEffect(() => {
+    const fetchFiltered = async () => {
+      setLoading(true);
+      try {
+        const queryParams = new URLSearchParams();
+        if (statusFilter) queryParams.append('status', statusFilter);
+        if (debouncedSearch) queryParams.append('search', debouncedSearch);
+
+        const response = await fetch(`/api/tickets?${queryParams.toString()}`);
+        if (response.ok) setTickets(await response.json());
+      } catch (error) {
+        console.error('Failed to fetch tickets:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void fetchFiltered();
+  }, [statusFilter, debouncedSearch]);
+
+  const handleRefresh = async () => {
+    await refetchTickets();
+    // Refetch tickets
     try {
       const queryParams = new URLSearchParams();
       if (statusFilter) queryParams.append('status', statusFilter);
@@ -62,18 +84,7 @@ function DashboardContent() {
       if (response.ok) setTickets(await response.json());
     } catch (error) {
       console.error('Failed to fetch tickets:', error);
-    } finally {
-      setLoading(false);
     }
-  }, [statusFilter, debouncedSearch]);
-
-  useEffect(() => {
-    fetchFiltered();
-  }, [fetchFiltered]);
-
-  const handleRefresh = async () => {
-    await refetchTickets();
-    await fetchFiltered();
   };
 
   const formatListDate = (dateString: string) => {
@@ -96,9 +107,9 @@ function DashboardContent() {
   ];
 
   const accentMap: Record<string, { bar: string; icon: string; ring: string }> = {
-    indigo: { bar: 'bg-indigo-500', icon: 'bg-indigo-500/10 text-indigo-400', ring: 'ring-indigo-500/30' },
+    indigo: { bar: 'bg-cyan-500', icon: 'bg-cyan-500/10 text-cyan-400', ring: 'ring-cyan-500/30' },
     emerald: { bar: 'bg-emerald-500', icon: 'bg-emerald-500/10 text-emerald-400', ring: 'ring-emerald-500/30' },
-    amber: { bar: 'bg-amber-500', icon: 'bg-amber-500/10 text-amber-400', ring: 'ring-amber-500/30' },
+    amber: { bar: 'bg-orange-500', icon: 'bg-orange-500/10 text-orange-400', ring: 'ring-orange-500/30' },
     slate: { bar: 'bg-slate-500', icon: 'bg-slate-500/10 text-slate-400', ring: 'ring-slate-500/30' },
   };
 
@@ -107,10 +118,10 @@ function DashboardContent() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
         <div>
-          <p className="text-indigo-400 text-xs font-bold uppercase tracking-[0.2em] mb-2">Ticketing System</p>
+          <p className="text-cyan-400 text-xs font-bold uppercase tracking-[0.2em] mb-2">🎫 Ticketing System</p>
           <h1 className="text-3xl font-bold tracking-tight text-white">All Support Tickets</h1>
           <p className="text-slate-400 text-sm mt-1.5 max-w-xl">
-            Create, search, filter, and manage customer support tickets in one professional dashboard.
+            Streamline customer support with powerful search, filtering, and real-time collaboration tools.
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -168,7 +179,7 @@ function DashboardContent() {
               placeholder="Quick search — names, IDs, emails, descriptions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500"
+              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500"
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
@@ -183,9 +194,9 @@ function DashboardContent() {
                 Closed: 'Closed',
               };
               const active: Record<string, string> = {
-                '': 'bg-indigo-600 border-indigo-500 text-white',
+                '': 'bg-cyan-600 border-cyan-500 text-white',
                 Open: 'bg-emerald-600 border-emerald-500 text-white',
-                'In Progress': 'bg-amber-600 border-amber-500 text-white',
+                'In Progress': 'bg-orange-600 border-orange-500 text-white',
                 Closed: 'bg-slate-600 border-slate-500 text-white',
               };
               return (
@@ -210,7 +221,7 @@ function DashboardContent() {
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <Inbox size={16} className="text-indigo-400" />
+            <Inbox size={16} className="text-cyan-400" />
             Ticket List
           </h2>
           <span className="text-xs text-slate-500">
@@ -232,15 +243,19 @@ function DashboardContent() {
           </div>
         ) : tickets.length === 0 ? (
           <div className="p-14 text-center">
-            <div className="mx-auto w-14 h-14 rounded-2xl bg-slate-800/60 flex items-center justify-center text-slate-400 mb-4">
-              <Inbox size={26} />
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-slate-800/60 flex items-center justify-center text-4xl mb-4">
+              📭
             </div>
             <h3 className="text-base font-bold text-white">No tickets found</h3>
-            <p className="text-slate-500 text-sm mt-1">Try adjusting your search or status filter.</p>
+            <p className="text-slate-500 text-sm mt-1">
+              {(search || statusFilter) 
+                ? 'Try adjusting your search or status filter.' 
+                : 'Start by creating your first support ticket.'}
+            </p>
             {(search || statusFilter) && (
               <button
                 onClick={() => { setSearch(''); setStatusFilter(''); }}
-                className="mt-4 px-4 py-2 text-xs font-semibold text-indigo-400 bg-indigo-600/10 rounded-lg border border-indigo-500/20"
+                className="mt-4 px-4 py-2 text-xs font-semibold text-cyan-400 bg-cyan-600/10 rounded-lg border border-cyan-500/20 hover:bg-cyan-600/20 transition-colors"
               >
                 Clear filters
               </button>
@@ -268,7 +283,7 @@ function DashboardContent() {
                       className="group"
                     >
                       <td>
-                        <span className="font-mono text-sm font-bold text-indigo-400 group-hover:text-indigo-300">
+                        <span className="font-mono text-sm font-bold text-cyan-400 group-hover:text-cyan-300">
                           {ticket.ticket_id}
                         </span>
                       </td>
@@ -314,7 +329,7 @@ export default function Home() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center min-h-[400px]">
-          <span className="w-8 h-8 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin" />
+          <span className="w-8 h-8 border-2 border-cyan-600/30 border-t-cyan-600 rounded-full animate-spin" />
         </div>
       }
     >

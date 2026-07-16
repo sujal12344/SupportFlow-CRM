@@ -13,7 +13,7 @@ const sizeClasses = {
 };
 
 const colorPairs = [
-  'from-indigo-500 to-violet-600',
+  'from-cyan-500 to-teal-600',
   'from-emerald-500 to-teal-600',
   'from-amber-500 to-orange-600',
   'from-rose-500 to-pink-600',
@@ -43,7 +43,7 @@ export default function CustomerAvatar({ name, size = 'sm', className = '' }: Cu
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center font-bold text-white shadow-lg shrink-0 ${className}`}
+      className={`${sizeClasses[size]} rounded-full bg-linear-to-br ${gradient} flex items-center justify-center font-bold text-white shadow-lg shrink-0 ${className}`}
       title={name}
     >
       {initials}

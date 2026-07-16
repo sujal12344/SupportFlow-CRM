@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
@@ -35,25 +34,22 @@ export default function Sidebar({ onOpenCreateDrawer }: SidebarProps) {
 
   return (
     <aside className="w-64 bg-slate-900/95 border-r border-slate-800/80 flex flex-col h-full text-slate-300 backdrop-blur-xl">
-      <div className="h-16 px-5 border-b border-slate-800/80 flex items-center">
+      <div className="h-16 px-5 border-b border-slate-800/80 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-600/30 group-hover:shadow-indigo-600/50 transition-shadow">
-            DS
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-cyan-500 via-teal-500 to-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-shadow">
+            SK
           </div>
           <div>
-            <span className="font-bold text-white tracking-wide text-sm block leading-tight">DATASTRAW</span>
-            <span className="text-indigo-400/70 font-semibold tracking-widest text-[9px] block">SUPPORT CRM</span>
+            <span className="font-bold text-white tracking-wide text-sm block leading-tight">SupportFlow</span>
+            <span className="text-cyan-400/70 font-semibold tracking-widest text-[9px] block">SUPPORT CRM</span>
           </div>
         </Link>
-      </div>
-
-      <div className="p-4">
         <button
           onClick={onOpenCreateDrawer}
-          className="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 active:scale-[0.98] transition-all"
+          className="p-2 bg-linear-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white rounded-lg shadow-lg shadow-cyan-600/25 hover:shadow-cyan-600/40 active:scale-95 transition-all"
+          title="Create New Ticket"
         >
           <Plus size={16} />
-          Create Ticket
         </button>
       </div>
 
@@ -66,12 +62,12 @@ export default function Sidebar({ onOpenCreateDrawer }: SidebarProps) {
             href="/"
             className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
               isHomeActive && !activeStatus
-                ? 'bg-indigo-600/15 text-white font-semibold border border-indigo-500/25'
+                ? 'bg-cyan-600/15 text-white font-semibold border border-cyan-500/25'
                 : 'hover:bg-slate-800/60 hover:text-slate-200'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <Inbox size={18} className={isHomeActive && !activeStatus ? 'text-indigo-400' : 'text-slate-400'} />
+              <Inbox size={18} className={isHomeActive && !activeStatus ? 'text-cyan-400' : 'text-slate-400'} />
               <span>List All Tickets</span>
             </div>
             <span className="bg-slate-850 px-2 py-0.5 rounded-md text-slate-300 text-xs font-semibold border border-slate-700/40">
@@ -93,7 +89,7 @@ export default function Sidebar({ onOpenCreateDrawer }: SidebarProps) {
                   href={`/?status=${encodeURIComponent(value)}`}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all ${
                     isActive
-                      ? 'bg-slate-800/80 text-white font-medium border border-slate-700/50'
+                      ? 'bg-cyan-600/15 text-white font-medium border border-cyan-500/30'
                       : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
                   }`}
                 >
@@ -109,13 +105,13 @@ export default function Sidebar({ onOpenCreateDrawer }: SidebarProps) {
         </div>
 
         <div className="px-3">
-          <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-600/10 to-violet-600/5 border border-indigo-500/15">
+          <div className="p-4 rounded-xl bg-linear-to-br from-cyan-600/10 to-teal-600/5 border border-cyan-500/15">
             <div className="flex items-center gap-2 mb-2">
-              <Headphones size={16} className="text-indigo-400" />
-              <span className="text-xs font-bold text-indigo-300">Support Hub</span>
+              <Headphones size={16} className="text-cyan-400" />
+              <span className="text-xs font-bold text-cyan-300">Support Hub</span>
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed">
-              Track, assign, and resolve customer issues from one unified dashboard.
+              Manage customer tickets efficiently with real-time tracking and collaboration.
             </p>
           </div>
         </div>

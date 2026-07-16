@@ -35,7 +35,9 @@ const supabase = !isDemoMode() ? createClient(supabaseUrl, supabaseAnonKey) : nu
 // MOCK DATABASE & SEED DATA (For Demo Mode)
 // ==========================================
 
-let mockTickets: Ticket[] = [
+// Using an object wrapper to allow mutation while keeping the reference const
+const mockData = {
+  tickets: [
   {
     id: 'd9b0f69a-694d-4cb0-a8a2-25cb51197c31',
     ticket_id: 'TKT-1001',
@@ -98,7 +100,8 @@ let mockTickets: Ticket[] = [
       }
     ]
   }
-];
+] as Ticket[]
+};
 
 let nextTicketSeq = 1004;
 
@@ -108,7 +111,7 @@ let nextTicketSeq = 1004;
 
 export async function getTickets(filters?: { status?: string; search?: string }): Promise<Ticket[]> {
   if (isDemoMode() || !supabase) {
-    let result = [...mockTickets];
+    let result = [...mockData.tickets];
 
     if (filters?.status) {
       result = result.filter(t => t.status.toLowerCase() === filters.status?.toLowerCase());
@@ -154,7 +157,7 @@ export async function getTickets(filters?: { status?: string; search?: string })
 
 export async function getTicketByTicketId(ticketId: string): Promise<Ticket | null> {
   if (isDemoMode() || !supabase) {
-    const ticket = mockTickets.find(t => t.ticket_id.toLowerCase() === ticketId.toLowerCase());
+    const ticket = mockData.tickets.find(t => t.ticket_id.toLowerCase() === ticketId.toLowerCase());
     return ticket ? { ...ticket } : null;
   }
 
@@ -204,7 +207,7 @@ export async function createTicket(ticket: Omit<Ticket, 'id' | 'ticket_id' | 'cr
       updated_at: timestamp,
       notes: []
     };
-    mockTickets.unshift(newTicket);
+    mockData.tickets.unshift(newTicket);
     return { ...newTicket };
   }
 
@@ -237,12 +240,12 @@ export async function updateTicket(
   const timestamp = new Date().toISOString();
 
   if (isDemoMode() || !supabase) {
-    const ticketIndex = mockTickets.findIndex(t => t.ticket_id.toLowerCase() === ticketId.toLowerCase());
+    const ticketIndex = mockData.tickets.findIndex(t => t.ticket_id.toLowerCase() === ticketId.toLowerCase());
     if (ticketIndex === -1) {
       throw new Error(`Ticket ${ticketId} not found`);
     }
 
-    const ticket = mockTickets[ticketIndex];
+    const ticket = mockData.tickets[ticketIndex];
     
     if (updates.status) {
       ticket.status = updates.status;
@@ -262,7 +265,7 @@ export async function updateTicket(
       });
     }
 
-    mockTickets[ticketIndex] = ticket;
+    mockData.tickets[ticketIndex] = ticket;
     return { success: true, updated_at: timestamp };
   }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Send, User, Mail, Tag, AlignLeft, Sparkles } from 'lucide-react';
 
 interface CreateTicketDrawerProps {
@@ -16,10 +16,6 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) setError(null);
-  }, [isOpen]);
 
   const resetForm = () => {
     setCustomerName('');
@@ -71,12 +67,12 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
       <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" onClick={onClose} />
 
       <div className="relative z-10 w-full max-w-lg bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col h-full animate-slide-in">
-        <div className="px-6 py-5 border-b border-slate-800 bg-gradient-to-r from-indigo-600/15 via-violet-600/5 to-transparent">
+        <div className="px-6 py-5 border-b border-slate-800 bg-linear-to-r from-cyan-600/15 via-teal-600/5 to-transparent">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Feature 1</p>
-              <h2 className="text-xl font-bold text-white">Create Ticket</h2>
-              <p className="text-slate-400 text-xs mt-1">Customer details + issue information</p>
+              <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-1">Feature 1</p>
+              <h2 className="text-xl font-bold text-white">Create New Ticket</h2>
+              <p className="text-slate-400 text-xs mt-1">Enter customer and issue details</p>
             </div>
             <button onClick={onClose} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
               <X size={20} />
@@ -86,11 +82,11 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
           <div className="flex-1 overflow-y-auto p-6 space-y-5">
-            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-indigo-600/10 border border-indigo-500/20">
-              <Sparkles size={16} className="text-indigo-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-indigo-200/90 leading-relaxed">
-                <strong className="text-indigo-300">Ticket ID</strong> (e.g. TKT-1001) and{' '}
-                <strong className="text-indigo-300">timestamp</strong> are generated automatically on submit.
+            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-cyan-600/10 border border-cyan-500/20">
+              <Sparkles size={16} className="text-cyan-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-cyan-200/90 leading-relaxed">
+                <strong className="text-cyan-300">Ticket ID</strong> (e.g. TKT-1001) and{' '}
+                <strong className="text-cyan-300">timestamp</strong> are generated automatically on submit.
               </p>
             </div>
 
@@ -107,7 +103,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
               <div className="space-y-2">
                 <label htmlFor="customer-name" className="crm-label">
-                  <User size={14} className="text-indigo-400" />
+                  <User size={14} className="text-cyan-400" />
                   Customer Name <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -123,7 +119,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
               <div className="space-y-2">
                 <label htmlFor="customer-email" className="crm-label">
-                  <Mail size={14} className="text-indigo-400" />
+                  <Mail size={14} className="text-cyan-400" />
                   Customer Email <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -145,7 +141,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
               <div className="space-y-2">
                 <label htmlFor="title" className="crm-label">
-                  <Tag size={14} className="text-indigo-400" />
+                  <Tag size={14} className="text-cyan-400" />
                   Issue Title <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -161,7 +157,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
               <div className="space-y-2">
                 <label htmlFor="description" className="crm-label">
-                  <AlignLeft size={14} className="text-indigo-400" />
+                  <AlignLeft size={14} className="text-cyan-400" />
                   Description <span className="text-rose-400">*</span>
                 </label>
                 <textarea
@@ -188,7 +184,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+              className="flex-1 py-2.5 bg-linear-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-indigo-600/20"
             >
               {loading ? (
                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

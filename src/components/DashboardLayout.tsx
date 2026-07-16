@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, Suspense } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import { Menu, X, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
@@ -74,15 +74,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Menu size={20} />
             </button>
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-indigo-600/30">
-                DS
+              <div className="w-7 h-7 rounded-lg bg-linear-to-br from-cyan-500 via-teal-500 to-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-cyan-500/30">
+                SK
               </div>
-              <span className="font-bold text-white tracking-wide text-xs">DATASTRAW</span>
+              <span className="font-bold text-white tracking-wide text-xs">SupportFlow</span>
             </Link>
           </div>
           <button
             onClick={() => setIsCreateDrawerOpen(true)}
-            className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/25"
+            className="p-2 bg-linear-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-cyan-600/30"
           >
             <Plus size={18} />
           </button>

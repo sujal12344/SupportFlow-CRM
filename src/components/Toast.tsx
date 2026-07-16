@@ -23,7 +23,7 @@ export default function Toast({ message, type = 'success', onClose, duration = 4
   return (
     <div
       role="alert"
-      className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl animate-slide-up max-w-sm"
+      className="fixed bottom-6 right-6 z-100 flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl animate-slide-up max-w-sm"
       style={{
         background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(19, 28, 46, 0.98) 100%)',
         borderColor: isSuccess ? 'rgba(52, 211, 153, 0.3)' : 'rgba(244, 63, 94, 0.3)',

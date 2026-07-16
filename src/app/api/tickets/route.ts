@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTickets, createTicket } from '@/lib/db';
+import { ticketSchema } from '@/lib/validation';
+import { ZodError } from 'zod';
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,21 +35,15 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { customer_name, customer_email, subject, description } = body;
-
-    // Simple validation
-    if (!customer_name || !customer_email || !subject || !description) {
-      return NextResponse.json(
-        { error: 'Missing required fields: customer_name, customer_email, subject, and description are required.' },
-        { status: 400 }
-      );
-    }
+    
+    // Validate request body with Zod
+    const validatedData = ticketSchema.parse(body);
 
     const newTicket = await createTicket({
-      customer_name,
-      customer_email,
-      subject,
-      description
+      customer_name: validatedData.customer_name,
+      customer_email: validatedData.customer_email,
+      subject: validatedData.subject,
+      description: validatedData.description
     });
 
     // Return format as requested: { ticket_id, created_at }
@@ -56,9 +52,18 @@ export async function POST(request: NextRequest) {
       created_at: newTicket.created_at
     }, { status: 201 });
   } catch (error: unknown) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      const firstError = error.issues[0];
+      return NextResponse.json(
+        { error: firstError.message },
+        { status: 400 }
+      );
+    }
+    
     console.error('API POST /api/tickets error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create ticket' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

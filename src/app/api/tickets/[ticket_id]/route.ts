@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTicketByTicketId, updateTicket } from '@/lib/db';
+import { ticketUpdateSchema } from '@/lib/validation';
+import { ZodError } from 'zod';
 
 type RouteParams = {
   params: Promise<{ ticket_id: string }>;
@@ -48,20 +50,14 @@ export async function PUT(
   try {
     const { ticket_id } = await params;
     const body = await request.json();
-    const { status, notes, note_text } = body;
-
-    // Validate that at least status or note is being updated
-    if (status === undefined && notes === undefined && note_text === undefined) {
-      return NextResponse.json(
-        { error: 'Body must contain at least "status" or "notes"/"note_text" field.' },
-        { status: 400 }
-      );
-    }
+    
+    // Validate request body with Zod
+    const validatedData = ticketUpdateSchema.parse(body);
 
     // Call update function
     const result = await updateTicket(ticket_id, {
-      status: status || undefined,
-      note_text: notes || note_text || undefined
+      status: validatedData.status,
+      note_text: validatedData.notes || validatedData.note_text
     });
 
     // Return format: { success: true, updated_at }
@@ -70,9 +66,26 @@ export async function PUT(
       updated_at: result.updated_at
     });
   } catch (error: unknown) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      const firstError = error.issues[0];
+      return NextResponse.json(
+        { error: firstError.message },
+        { status: 400 }
+      );
+    }
+
+    // Handle not found errors
+    if (error instanceof Error && error.message.includes('not found')) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 404 }
+      );
+    }
+    
     console.error(`API PUT /api/tickets/[ticket_id] error:`, error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update ticket' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

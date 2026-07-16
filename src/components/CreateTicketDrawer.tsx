@@ -27,8 +27,50 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerName.trim() || !customerEmail.trim() || !subject.trim() || !description.trim()) {
+    
+    // Client-side validation
+    const trimmedName = customerName.trim();
+    const trimmedEmail = customerEmail.trim();
+    const trimmedSubject = subject.trim();
+    const trimmedDescription = description.trim();
+
+    if (!trimmedName || !trimmedEmail || !trimmedSubject || !trimmedDescription) {
       setError('Please fill in all required fields.');
+      return;
+    }
+
+    // Validate lengths
+    if (trimmedName.length < 2) {
+      setError('Customer name must be at least 2 characters.');
+      return;
+    }
+    if (trimmedName.length > 100) {
+      setError('Customer name must not exceed 100 characters.');
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+
+    if (trimmedSubject.length < 3) {
+      setError('Subject must be at least 3 characters.');
+      return;
+    }
+    if (trimmedSubject.length > 150) {
+      setError('Subject must not exceed 150 characters.');
+      return;
+    }
+
+    if (trimmedDescription.length < 5) {
+      setError('Description must be at least 5 characters.');
+      return;
+    }
+    if (trimmedDescription.length > 3000) {
+      setError('Description must not exceed 3000 characters.');
       return;
     }
 
@@ -40,10 +82,10 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customer_name: customerName.trim(),
-          customer_email: customerEmail.trim(),
-          subject: subject.trim(),
-          description: description.trim(),
+          customer_name: trimmedName,
+          customer_email: trimmedEmail,
+          subject: trimmedSubject,
+          description: trimmedDescription,
         }),
       });
 
@@ -105,6 +147,9 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                 <label htmlFor="customer-name" className="crm-label">
                   <User size={14} className="text-cyan-400" />
                   Customer Name <span className="text-rose-400">*</span>
+                  <span className="ml-auto text-slate-500 text-[10px] font-normal">
+                    {customerName.trim().length}/100
+                  </span>
                 </label>
                 <input
                   id="customer-name"
@@ -113,6 +158,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                   placeholder="e.g. Jane Doe"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
+                  maxLength={100}
                   className="crm-input"
                 />
               </div>
@@ -121,6 +167,9 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                 <label htmlFor="customer-email" className="crm-label">
                   <Mail size={14} className="text-cyan-400" />
                   Customer Email <span className="text-rose-400">*</span>
+                  <span className="ml-auto text-slate-500 text-[10px] font-normal">
+                    {customerEmail.trim().length}/254
+                  </span>
                 </label>
                 <input
                   id="customer-email"
@@ -129,6 +178,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                   placeholder="e.g. jane@company.com"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
+                  maxLength={254}
                   className="crm-input"
                 />
               </div>
@@ -143,6 +193,9 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                 <label htmlFor="title" className="crm-label">
                   <Tag size={14} className="text-cyan-400" />
                   Issue Title <span className="text-rose-400">*</span>
+                  <span className="ml-auto text-slate-500 text-[10px] font-normal">
+                    {subject.trim().length}/150
+                  </span>
                 </label>
                 <input
                   id="title"
@@ -151,6 +204,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                   placeholder="Brief summary of the problem"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
+                  maxLength={150}
                   className="crm-input"
                 />
               </div>
@@ -159,6 +213,9 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                 <label htmlFor="description" className="crm-label">
                   <AlignLeft size={14} className="text-cyan-400" />
                   Description <span className="text-rose-400">*</span>
+                  <span className="ml-auto text-slate-500 text-[10px] font-normal">
+                    {description.trim().length}/3000
+                  </span>
                 </label>
                 <textarea
                   id="description"
@@ -167,6 +224,7 @@ export default function CreateTicketDrawer({ isOpen, onClose, onTicketCreated }:
                   placeholder="Describe the issue in detail — steps to reproduce, error messages, etc."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  maxLength={3000}
                   className="crm-input resize-none leading-relaxed"
                 />
               </div>

@@ -70,5 +70,25 @@ This fork has been customized with:
 - **Enhanced Status Badges**: Square badges with emoji indicators and gradient backgrounds
 - **Repositioned Create Button**: Moved to sidebar header for better accessibility
 - **Custom Empty State**: Mailbox emoji and contextual messaging
+- **Zod Validation**: Comprehensive input validation with proper error messages
+  - Email format validation
+  - Length constraints (2-100 chars for names, 3-150 for subjects, 5-3000 for descriptions)
+  - Automatic whitespace trimming
+  - Character counters on all form fields
+  - User-friendly error messages
+
+---
+
+## 🔒 Validation Rules
+
+The application uses [Zod](https://zod.dev/) for robust input validation:
+
+- **Customer Name**: 2-100 characters, trimmed
+- **Customer Email**: Valid email format, max 254 characters
+- **Subject**: 3-150 characters, trimmed
+- **Description**: 5-3000 characters, trimmed
+- **Notes**: 1-2000 characters when updating tickets
+
+All validations run on both client and server side for security and UX.
 
 

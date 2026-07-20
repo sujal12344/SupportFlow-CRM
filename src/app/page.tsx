@@ -114,7 +114,7 @@ function DashboardContent() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-7 max-w-[1440px] mx-auto animate-fade-in">
+    <div className="p-6 lg:p-8 space-y-7 max-w-360 mx-auto animate-fade-in">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
         <div>
@@ -328,7 +328,7 @@ export default function Home() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <span className="w-8 h-8 border-2 border-cyan-600/30 border-t-cyan-600 rounded-full animate-spin" />
         </div>
       }
